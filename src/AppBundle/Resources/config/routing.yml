@@ -1,0 +1,8 @@
+user:
+    type: rest
+    resource: AppBundle\Controller\UserController
+
+report:
+    type: rest
+    parent: user
+    resource: AppBundle\Controller\ReportController
