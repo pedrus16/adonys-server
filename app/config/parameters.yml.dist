@@ -4,9 +4,9 @@
 parameters:
     database_host:     127.0.0.1
     database_port:     ~
-    database_name:     symfony
+    database_name:     adonys
     database_user:     root
-    database_password: ~
+    database_password:
     # You should uncomment this if you want use pdo_sqlite
     # database_path: "%kernel.root_dir%/data.db3"
 
@@ -17,3 +17,10 @@ parameters:
 
     # A secret key that's used to generate certain security-related tokens
     secret:            ThisTokenIsNotSoSecretChangeIt
+
+    dev.delivery_address: pierre.nole@gmail.com
+
+    private_key_path: %kernel.root_dir%/var/jwt/private.ppk   # ssh private key path
+    public_key_path:  %kernel.root_dir%/var/jwt/public.ppk    # ssh public key path
+    pass_phrase:  'adonys'                          # ssh key pass phrase
+    token_ttl:        86400

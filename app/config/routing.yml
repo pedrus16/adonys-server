@@ -1,5 +1,15 @@
 app:
     resource: "@AppBundle/Controller/"
     type:     annotation
-fos_user:
-    resource: "@FOSUserBundle/Resources/config/routing/all.xml"
+
+users:
+    type: rest
+    resource: AppBundle\Controller\UsersController
+
+login_check:
+    path: /api/login_check
+
+# REST
+# api_page:
+    # type:           rest
+    # resource:       ApiBundle\Controller\Rest\PageController
