@@ -7,7 +7,7 @@ users:
     resource: AppBundle\Controller\UsersController
 
 login_check:
-    path: /api/login_check
+    path: /login_check
 
 # REST
 # api_page:

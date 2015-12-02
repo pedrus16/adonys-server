@@ -89,8 +89,7 @@ fos_user:
 fos_rest:
     format_listener:
         rules:
-            - { path: '^/api', priorities: ['json'], fallback_format: json, prefer_extension: false }
-            - { path: '^/', priorities: ['html'], fallback_format: html, prefer_extension: false }
+            - { path: '^/', priorities: ['json'], fallback_format: json, prefer_extension: false }
     view:
         view_response_listener: force
         formats:
@@ -119,7 +118,7 @@ lexik_jwt_authentication:
 
 nelmio_cors:
     paths:
-        '^/api/':
+        '^/':
             allow_origin: ['*']
             allow_headers: ['*']
             allow_methods: ['POST', 'PUT', 'GET', 'DELETE']
