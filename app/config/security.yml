@@ -14,8 +14,8 @@ security:
 
     # http://symfony.com/doc/current/book/security.html#where-do-users-come-from-user-providers
     providers:
-        database_users:
-            entity: { class: AppBundle:User, property: email }
+        # database_users:
+            # entity: { class: AppBundle:User, property: email }
         # in_memory:
         #     memory:
         #         users:
@@ -30,6 +30,7 @@ security:
             security: false
 
         login:
+            provider: fos_userbundle
             pattern: ^/login
             stateless: true
             anonymous: true
@@ -43,6 +44,7 @@ security:
                 require_previous_session: false
 
         api:
+            provider: fos_userbundle
             pattern:   ^/
             stateless: true
             lexik_jwt:
