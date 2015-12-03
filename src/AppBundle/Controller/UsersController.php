@@ -11,7 +11,6 @@ class UsersController extends FOSRestController
 
     public function getUserAction($id)
     {
-      // $this->denyAccessUnlessGranted('ROLE_USER', null, 'Unable to access this page!');
       $user = $this->getDoctrine()
         ->getRepository('AppBundle:User')
         ->find($id);
@@ -27,7 +26,6 @@ class UsersController extends FOSRestController
 
     public function getUsersAction()
     {
-      // $this->denyAccessUnlessGranted('ROLE_USER', null, 'Unable to access this page!');
       $users = $this->getDoctrine()
         ->getRepository('AppBundle:User')
         ->findAll();
