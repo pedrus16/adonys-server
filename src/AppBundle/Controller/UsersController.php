@@ -37,13 +37,18 @@ class UsersController extends FOSRestController
       // $repository->setParameter('price', '19.99');
 
       // Order by
-      // $queryBuilder->orderBy('u.id', 'DESC');
+      $sortBy = $request->query->get('sortBy');
+      $order = $request->query->get('order');
 
-      $query = $queryBuilder->getQuery();
+      $em = $this->getDoctrine()->getManager();
+      $fields = $em->getClassMetadata('AppBundle:User')->getFieldNames();
+      if (!$sortBy || !in_array($sortBy, $fields)) {
+        $sortBy = 'id';
+      }
+      $queryBuilder->orderBy('u.' . $sortBy, $order == 'desc' ? 'desc' : 'asc');
 
       // Pagination
-      // $query->setFirstResult($limit * ($page - 1));
-      // $query->setMaxResult($limit);
+      $query = $queryBuilder->getQuery();
       $page = $request->query->get('page');
       $limit = $request->query->get('limit');
       if ($page) {
