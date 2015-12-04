@@ -56,17 +56,10 @@ class UsersController extends FOSRestController
 
       // Filters
       $filters = json_decode($request->query->get('filters'));
-      $first = true;
       if ($filters) {
         foreach ($filters as $field => $values) {
           foreach ($values as $key => $value) {
-            // if ($first) {
-              // $first = false;
-              // $queryBuilder->andWhere('u.roles LIKE :roles_' . $key);
-            // }
-            // else {
-              $queryBuilder->orHaving('u.roles LIKE :roles_' . $key);
-            // }
+            $queryBuilder->orHaving('u.roles LIKE :roles_' . $key);
             $queryBuilder->setParameter('roles_' . $key, '%"' . $value . '"%');
           }
         }
