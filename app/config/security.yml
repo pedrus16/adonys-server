@@ -14,12 +14,6 @@ security:
 
     # http://symfony.com/doc/current/book/security.html#where-do-users-come-from-user-providers
     providers:
-        # database_users:
-            # entity: { class: AppBundle:User, property: email }
-        # in_memory:
-        #     memory:
-        #         users:
-        #             admin: { password: password, roles: [ 'ROLE_ADMIN' ] }
         fos_userbundle:
             id: fos_user.user_provider.username_email
 
