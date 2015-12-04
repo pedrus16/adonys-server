@@ -8,6 +8,14 @@ use AppBundle\Entity\User;
 
 class UsersController extends FOSRestController
 {
+    private $fields = array(
+      'id',
+      'firstname',
+      'lastname',
+      'email',
+      'company',
+      'roles',
+    );
 
     public function getUserAction($id)
     {
@@ -27,22 +35,48 @@ class UsersController extends FOSRestController
     public function getUsersAction()
     {
       $request = $this->getRequest();
-      $repository = $this->getDoctrine()
-        ->getRepository('AppBundle:User');
+      $em = $this->getDoctrine()->getManager();
+      // $fields = $em->getClassMetadata('AppBundle:User')->getFieldNames();
 
+      $repository = $this->getDoctrine()->getRepository('AppBundle:User');
       $queryBuilder = $repository->createQueryBuilder('u');
 
+      // Search
+      $search = $request->query->get('search');
+      if ($search) {
+        $queryBuilder->orwhere('u.firstname LIKE :search_firstname');
+        $queryBuilder->orwhere('u.lastname LIKE :search_lastname');
+        $queryBuilder->orwhere('u.email LIKE :search_email');
+        $queryBuilder->orwhere('u.company LIKE :search_company');
+        $queryBuilder->setParameter('search_firstname', '%'. $search . '%');
+        $queryBuilder->setParameter('search_lastname', '%'. $search . '%');
+        $queryBuilder->setParameter('search_email', '%'. $search . '%');
+        $queryBuilder->setParameter('search_company', '%'. $search . '%');
+      }
+
       // Filters
-      // $repository->where('p.price > :price');
-      // $repository->setParameter('price', '19.99');
+      $filters = json_decode($request->query->get('filters'));
+      $first = true;
+      if ($filters) {
+        foreach ($filters as $field => $values) {
+          foreach ($values as $key => $value) {
+            if ($first) {
+              $first = false;
+              $queryBuilder->andWhere('u.roles LIKE :roles_' . $key);
+            }
+            else {
+              $queryBuilder->orWhere('u.roles LIKE :roles_' . $key);
+            }
+            $queryBuilder->setParameter('roles_' . $key, '%"' . $value . '"%');
+          }
+        }
+      }
 
       // Order by
-      $sortBy = $request->query->get('sortBy');
-      $order = $request->query->get('order');
+      $sortBy = $request->query->get('sortBy', 'id');
+      $order = $request->query->get('order', 'asc');
 
-      $em = $this->getDoctrine()->getManager();
-      $fields = $em->getClassMetadata('AppBundle:User')->getFieldNames();
-      if (!$sortBy || !in_array($sortBy, $fields)) {
+      if (!in_array($sortBy, $this->fields)) {
         $sortBy = 'id';
       }
       $queryBuilder->orderBy('u.' . $sortBy, $order == 'desc' ? 'desc' : 'asc');
