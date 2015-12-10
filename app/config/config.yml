@@ -107,7 +107,11 @@ fos_rest:
 # JMS Serializer
 jms_serializer:
     metadata:
-        auto_detection: true
+        directories:
+            FOSUB:
+              # path: "%kernel.root_dir%/Resources/FOSUserBundle/serializer"
+              path: "@AppBundle/Resources/config/serializer/FOSUB"
+              namespace_prefix: "FOS\\UserBundle"
 
 # Lexik JWT Authentication
 lexik_jwt_authentication:

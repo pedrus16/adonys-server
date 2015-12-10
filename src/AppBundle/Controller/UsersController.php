@@ -3,8 +3,13 @@
 namespace AppBundle\Controller;
 
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Security\Core\Util\SecureRandom;
 use FOS\RestBundle\Controller\FOSRestController;
+use FOS\RestBundle\Controller\Annotations\View;
+use FOS\UserBundle\Model\UserManagerInterface;
 use AppBundle\Entity\User;
+use AppBundle\Form\UserType;
 
 class UsersController extends FOSRestController
 {
@@ -86,11 +91,53 @@ class UsersController extends FOSRestController
       return $query->getResult();
     }
 
-    public function postUsersAction()
-    {}
+    public function postUsersAction(Request $request)
+    {
+        $userManager = $this->get('fos_user.user_manager');
+        $user = $userManager->createUser();
+        $form = $this->createForm(new UserType(), $user);
+        $form->submit($request->request->get($form->getName()));
+        if ($form->isValid()) {
+          if ($userManager->findUserByUsernameOrEmail($user->getEmail())) {
+            throw new \Exception('Un utilisateur avec cette adresse email existe déjà.');
+          }
+          $user->setUsername($user->getEmail());
+          $generator = new SecureRandom();
+          $user->setPlainPassword($generator->nextBytes(10));
+          $userManager->updateUser($user);
+          return $user;
+        }
+        return $this->view($form, 400);
+    }
 
-    public function putUsersAction()
-    {}
+    public function putUsersAction(Request $request, $id)
+    {
+      $userManager = $this->get('fos_user.user_manager');
+      $user = $userManager->findUserBy(array(
+        'id' => $id
+      ));
+      $form = $this->createForm(new UserType(), $user);
+      $form->submit($request->request->get($form->getName()));
+      if ($form->isValid()) {
+        // $user->setUsername($user->getEmail());
+        $userManager->updateUser($user);
+        return $user;
+      }
+      return $this->view($form, 400);
+    }
 
+    public function deleteUsersAction($id)
+    {
+      $userManager = $this->get('fos_user.user_manager');
+      $user = $userManager->findUserBy(array(
+        'id' => $id
+      ));
 
+      if ($user) {
+        $userBackup = clone $user;
+        $userManager->deleteUser($user);
+        return $userBackup;
+      }
+      return false;
+    }
 }

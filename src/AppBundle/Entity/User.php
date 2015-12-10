@@ -5,6 +5,7 @@ namespace AppBundle\Entity;
 use FOS\UserBundle\Entity\User as BaseUser;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation\ExclusionPolicy;
+use JMS\Serializer\Annotation\Expose;
 
 /**
  * User
@@ -28,6 +29,7 @@ class User extends BaseUser
      * @var string
      *
      * @ORM\Column(name="firstname", type="string", length=255, nullable=true)
+     * @Expose
      */
     private $firstname;
 
@@ -35,6 +37,7 @@ class User extends BaseUser
      * @var string
      *
      * @ORM\Column(name="lastname", type="string", length=255, nullable=true)
+     * @Expose
      */
     private $lastname;
 
@@ -42,6 +45,7 @@ class User extends BaseUser
      * @var string
      *
      * @ORM\Column(name="company", type="string", length=255, nullable=true)
+     * @Expose
      */
     private $company;
 
