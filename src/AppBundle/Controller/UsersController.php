@@ -13,13 +13,13 @@ use AppBundle\Form\UserType;
 
 class UsersController extends FOSRestController
 {
+
     private $fields = array(
       'id',
       'firstname',
       'lastname',
       'email',
       'company',
-      'roles',
     );
 
     public function getUserAction($id)
@@ -93,21 +93,52 @@ class UsersController extends FOSRestController
 
     public function postUsersAction(Request $request)
     {
+        return $this->sendRegistrationEmail();
         $userManager = $this->get('fos_user.user_manager');
         $user = $userManager->createUser();
         $form = $this->createForm(new UserType(), $user);
         $form->submit($request->request->get($form->getName()));
         if ($form->isValid()) {
-          if ($userManager->findUserByUsernameOrEmail($user->getEmail())) {
-            throw new \Exception('Un utilisateur avec cette adresse email existe déjà.');
-          }
+          // if ($userManager->findUserByUsernameOrEmail($user->getEmail())) {
+            // throw new \Exception('Un utilisateur avec cette adresse email existe déjà.');
+          // }
           $user->setUsername($user->getEmail());
           $generator = new SecureRandom();
           $user->setPlainPassword($generator->nextBytes(10));
-          $userManager->updateUser($user);
+          // $userManager->updateUser($user);
+
+
           return $user;
         }
         return $this->view($form, 400);
+    }
+
+    private function sendRegistrationEmail() {
+
+      $message = \Swift_Message::newInstance()
+       ->setSubject('Hello Email')
+       ->setFrom('send@example.com')
+       ->setTo('pierre.nole@gmail.com')
+       ->setBody(
+           $this->renderView(
+               // app/Resources/views/Emails/registration.html.twig
+               'Emails/registration.html.twig',
+               array('name' => 'TOTO')
+           ),
+           'text/html'
+       )
+       /*
+        * If you also want to include a plaintext version of the message
+       ->addPart(
+           $this->renderView(
+               'Emails/registration.txt.twig',
+               array('name' => $name)
+           ),
+           'text/plain'
+       )
+       */
+       ;
+       return $this->get('mailer')->send($message);
     }
 
     public function putUsersAction(Request $request, $id)
@@ -119,7 +150,7 @@ class UsersController extends FOSRestController
       $form = $this->createForm(new UserType(), $user);
       $form->submit($request->request->get($form->getName()));
       if ($form->isValid()) {
-        // $user->setUsername($user->getEmail());
+        $user->setUsername($user->getEmail());
         $userManager->updateUser($user);
         return $user;
       }

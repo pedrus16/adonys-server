@@ -6,8 +6,9 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
-class UserType extends AbstractType
+class ReportType extends AbstractType
 {
+
     /**
      * @param FormBuilderInterface $builder
      * @param array $options
@@ -16,10 +17,6 @@ class UserType extends AbstractType
     {
         $builder
             ->add('firstname')
-            ->add('lastname')
-            ->add('company')
-            ->add('email')
-            ->add('roles')
         ;
     }
 
@@ -29,7 +26,7 @@ class UserType extends AbstractType
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'AppBundle\Entity\User',
+            'data_class' => 'AppBundle\Entity\Report',
             'csrf_protection' => false // CSRF is useless for API form
         ));
     }
@@ -39,6 +36,6 @@ class UserType extends AbstractType
      */
     public function getName()
     {
-        return 'user';
+        return 'report';
     }
 }

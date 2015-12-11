@@ -75,7 +75,9 @@ doctrine:
 # Swiftmailer Configuration
 swiftmailer:
     transport: "%mailer_transport%"
+    auth_mode: "%mailer_auth_mode%"
     host:      "%mailer_host%"
+    host:      "%mailer_port%"
     username:  "%mailer_user%"
     password:  "%mailer_password%"
     spool:     { type: memory }
@@ -84,6 +86,17 @@ fos_user:
     db_driver: orm
     firewall_name: login
     user_class: AppBundle\Entity\User
+    # service:
+    #     mailer: fos_user.mailer.twig_swift
+    # registration:
+    #     confirmation:
+    #         enabled: true
+    #     from_email:
+    #         address:        registration@adonys.net
+    #         sender_name:    Inscription Adonys
+    from_email:
+        address:        noreply@adonys.net
+        sender_name:    Adonys
 
 # FOS Rest
 fos_rest:

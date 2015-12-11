@@ -6,6 +6,10 @@ users:
     type: rest
     resource: AppBundle\Controller\UsersController
 
+reports:
+    type: rest
+    resource: AppBundle\Controller\ReportsController
+
 login_check:
     path: /login_check
 
