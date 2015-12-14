@@ -53,6 +53,14 @@ class Report
     private $status;
 
     /**
+     * @var Date
+     *
+     * @ORM\Column(name="period", type="date")
+     * @Expose
+     */
+    private $period;
+
+    /**
      * Get id
      *
      * @return integer
@@ -132,5 +140,29 @@ class Report
     public function getStatus()
     {
         return $this->status;
+    }
+
+    /**
+     * Set period
+     *
+     * @param \DateTime $period
+     *
+     * @return Report
+     */
+    public function setPeriod($period)
+    {
+        $this->period = $period;
+
+        return $this;
+    }
+
+    /**
+     * Get period
+     *
+     * @return \DateTime
+     */
+    public function getPeriod()
+    {
+        return $this->period;
     }
 }

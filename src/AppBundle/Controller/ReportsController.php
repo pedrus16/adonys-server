@@ -49,15 +49,19 @@ class ReportsController extends FOSRestController
       // }
 
       // Filters
-      // $filters = json_decode($request->query->get('filters'));
-      // if ($filters) {
-      //   foreach ($filters as $field => $values) {
-      //     foreach ($values as $key => $value) {
-      //       $queryBuilder->orHaving('u.roles LIKE :roles_' . $key);
-      //       $queryBuilder->setParameter('roles_' . $key, '%"' . $value . '"%');
-      //     }
-      //   }
-      // }
+      $filters = json_decode($request->query->get('filters'));
+      if ($filters) {
+        foreach ($filters as $field => $value) {
+          if ($field === 'periodFrom' && $value) {
+            $queryBuilder->orHaving('r.period >= :periodFrom');
+            $queryBuilder->setParameter('periodFrom', $value);
+          }
+          if ($field === 'periodTo' && $value) {
+            $queryBuilder->andHaving('r.period <= :periodTo');
+            $queryBuilder->setParameter('periodTo', $value);
+          }
+        }
+      }
 
       // Order by
       $sortBy = $request->query->get('sortBy', 'id');
