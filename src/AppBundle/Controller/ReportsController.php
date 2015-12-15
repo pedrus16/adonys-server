@@ -16,14 +16,22 @@ class ReportsController extends FOSRestController
     private $fields = array(
       'id',
       'period',
-      'client',
-      'employee',
       'status',
     );
 
     public function getReportAction($id)
     {
+      $report = $this->getDoctrine()
+        ->getRepository('AppBundle:Report')
+        ->find($id);
 
+      if (!$report) {
+          throw $this->createNotFoundException(
+              'No report found for id ' . $id
+          );
+      }
+
+      return $report;
     }
 
     public function getReportsAction()
@@ -36,17 +44,15 @@ class ReportsController extends FOSRestController
       $queryBuilder = $repository->createQueryBuilder('r');
 
       // Search
-      // $search = $request->query->get('search');
-      // if ($search) {
-      //   $queryBuilder->orwhere('u.firstname LIKE :search_firstname');
-      //   $queryBuilder->orwhere('u.lastname LIKE :search_lastname');
-      //   $queryBuilder->orwhere('u.email LIKE :search_email');
-      //   $queryBuilder->orwhere('u.company LIKE :search_company');
-      //   $queryBuilder->setParameter('search_firstname', '%'. $search . '%');
-      //   $queryBuilder->setParameter('search_lastname', '%'. $search . '%');
-      //   $queryBuilder->setParameter('search_email', '%'. $search . '%');
-      //   $queryBuilder->setParameter('search_company', '%'. $search . '%');
-      // }
+      $search = $request->query->get('search');
+      if ($search) {
+        $queryBuilder->orwhere('r.client LIKE :search_firstname');
+        $queryBuilder->orwhere('r.employee LIKE :search_lastname');
+        $queryBuilder->orwhere('r.status LIKE :search_email');
+        $queryBuilder->setParameter('search_firstname', '%'. $search . '%');
+        $queryBuilder->setParameter('search_lastname', '%'. $search . '%');
+        $queryBuilder->setParameter('search_email', '%'. $search . '%');
+      }
 
       // Filters
       $filters = json_decode($request->query->get('filters'));
@@ -56,9 +62,16 @@ class ReportsController extends FOSRestController
             $queryBuilder->orHaving('r.period >= :periodFrom');
             $queryBuilder->setParameter('periodFrom', $value);
           }
-          if ($field === 'periodTo' && $value) {
+          elseif ($field === 'periodTo' && $value) {
             $queryBuilder->andHaving('r.period <= :periodTo');
             $queryBuilder->setParameter('periodTo', $value);
+          }
+          else {
+            // TODO Status filter
+            // foreach ($value as $key => $status) {
+            //   $queryBuilder->andHaving('r.status = :status_' . $key);
+            //   $queryBuilder->setParameter('status_' . $key, '"' . $status . '"');
+            // }
           }
         }
       }

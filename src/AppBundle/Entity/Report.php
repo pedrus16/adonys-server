@@ -61,6 +61,14 @@ class Report
     private $period;
 
     /**
+     * @var json_array
+     *
+     * @ORM\Column(name="days", type="json_array")
+     * @Expose
+     */
+    private $days;
+
+    /**
      * Get id
      *
      * @return integer
@@ -164,5 +172,29 @@ class Report
     public function getPeriod()
     {
         return $this->period;
+    }
+
+    /**
+     * Set days
+     *
+     * @param array $days
+     *
+     * @return Report
+     */
+    public function setDays($days)
+    {
+        $this->days = $days;
+
+        return $this;
+    }
+
+    /**
+     * Get days
+     *
+     * @return array
+     */
+    public function getDays()
+    {
+        return $this->days;
     }
 }
